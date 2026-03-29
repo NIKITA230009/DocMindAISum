@@ -1,0 +1,74 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="DocMind.Desktop.Views.MainWindow"
+        Title="DocMind AI"
+        Width="900" Height="700">
+	<Grid>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="200"/>
+			<ColumnDefinition Width="*"/>
+		</Grid.ColumnDefinitions>
+
+		<!-- Левая панель с вкладками -->
+		<TabControl Grid.Column="0" Margin="5">
+			<TabItem Header="Недавние">
+				<DockPanel>
+					<TextBlock Text="Недавние документы" DockPanel.Dock="Top" FontWeight="Bold" Margin="0,0,0,5"/>
+					<ListBox ItemsSource="{Binding RecentDocuments}"
+							 SelectedItem="{Binding SelectedDocument}"
+							 DoubleTapped="ListBox_DoubleTapped"
+							 Background="#F0F0F0">
+						<ListBox.ItemTemplate>
+							<DataTemplate>
+								<StackPanel>
+									<TextBlock Text="{Binding FilePath}" TextWrapping="Wrap" FontSize="12"/>
+									<TextBlock Text="{Binding LastOpened, StringFormat='dd.MM.yyyy HH:mm'}" FontSize="10" Foreground="Gray"/>
+								</StackPanel>
+							</DataTemplate>
+						</ListBox.ItemTemplate>
+					</ListBox>
+				</DockPanel>
+			</TabItem>
+		</TabControl>
+		<!-- Правая часть: редактор и AI-панель -->
+		<DockPanel Grid.Column="1">
+			<!-- Верхняя панель с кнопками -->
+			<StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Spacing="5" Margin="5">
+				<Button Content="Открыть" Command="{Binding OpenDocumentCommand}"/>
+				<Button Content="Сохранить" Command="{Binding SaveDocumentCommand}"/>
+			</StackPanel>
+
+			<!-- Нижняя панель статуса -->
+			<StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" Spacing="5" Margin="5">
+				<TextBlock Text="{Binding StatusText}" VerticalAlignment="Center"/>
+				<ProgressBar IsVisible="{Binding IsBusy}" IsIndeterminate="True" Width="100" Height="15" VerticalAlignment="Center"/>
+			</StackPanel>
+
+			<!-- Панель AI (над статусом) -->
+			<StackPanel DockPanel.Dock="Bottom" Orientation="Vertical" Margin="5">
+				<!-- Быстрые кнопки -->
+				<StackPanel Orientation="Horizontal" Spacing="5">
+					<Button Content="Суммаризировать" Command="{Binding SetSummarizeCommand}"/>
+					<Button Content="Перефразировать" Command="{Binding SetRephraseCommand}"/>
+				</StackPanel>
+				<Border BorderBrush="Gray" BorderThickness="1" Margin="0,5">
+					<ScrollViewer MaxHeight="150">
+						<TextBlock Text="{Binding AiOutputText}"
+								   TextWrapping="Wrap"/>
+					</ScrollViewer>
+				</Border>
+				<Button Content="Вставить результат"
+						Command="{Binding InsertAiResultCommand}"
+						HorizontalAlignment="Left"
+						Margin="0,5"/>
+			</StackPanel>
+
+			<!-- Редактор текста -->
+			<TextBox Text="{Binding DocumentContent}"
+					 AcceptsReturn="True"
+					 TextWrapping="Wrap"
+					 Margin="5"/>
+		</DockPanel>
+
+	</Grid>
+</Window>

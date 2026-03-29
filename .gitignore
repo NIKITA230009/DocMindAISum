@@ -1,0 +1,108 @@
+## Visual Studio / .NET Core ignore file
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.userprefs
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Ww][Ii][Nn]32/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Oo]ut/
+[Ll]og/
+[Ll]ogs/
+
+# Visual Studio cache
+.vs/
+*.vspscc
+*.vssscc
+*.cache
+
+# Build artifacts
+*.ilk
+*.meta
+*.obj
+*.iobj
+*.pch
+*.pdb
+*.ipdb
+*.pgc
+*.pgd
+*.rsp
+*.sbr
+*.tlb
+*.tli
+*.tlh
+*.tmp
+*.tmp_proj
+*.log
+*.pidb
+*.svclog
+*.scc
+
+# Test results
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+*.VisualState.xml
+TestResult.xml
+
+# NuGet
+*.nupkg
+*.snupkg
+**/[Pp]ackages/*
+!**/[Pp]ackages/build/
+*.nuget.props
+*.nuget.targets
+
+# .NET Core
+project.lock.json
+project.fragment.lock.json
+artifacts/
+*.binlog
+
+# ============================================
+# AI MODELS AND BINARY FILES (ВАЖНО!)
+# ============================================
+
+# Model files - игнорируем все бинарные файлы моделей
+*.gguf
+*.bin
+*.onnx
+*.pt
+*.pth
+*.safetensors
+
+# Model folders
+**/models/
+**/checkpoints/
+**/weights/
+
+# Logs
+**/logs/
+*.log
+
+# ============================================
+# Project specific
+# ============================================
+
+# Solution file (если не нужно коммитить)
+# DocMind.slnx
+
+# Local history
+.localhistory/
+
+# Mono auto generated files
+mono_crash.*
