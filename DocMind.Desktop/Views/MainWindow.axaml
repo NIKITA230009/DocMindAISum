@@ -36,6 +36,8 @@
 			<StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Spacing="5" Margin="5">
 				<Button Content="Открыть" Command="{Binding OpenDocumentCommand}"/>
 				<Button Content="Сохранить" Command="{Binding SaveDocumentCommand}"/>
+				<Button Content="Светлая тема" Command="{Binding SetLightThemeCommand}"/>
+				<Button Content="Тёмная тема" Command="{Binding SetDarkThemeCommand}"/>
 			</StackPanel>
 
 			<!-- Нижняя панель статуса -->
@@ -46,8 +48,21 @@
 
 			<!-- Панель AI (над статусом) -->
 			<StackPanel DockPanel.Dock="Bottom" Orientation="Vertical" Margin="5">
+				<!-- OpenRouter API настройка -->
+				<Expander Header="OpenRouter API">
+					<StackPanel Margin="5">
+						<TextBlock Text="API Key:" Margin="0,0,0,3"/>
+						<StackPanel Orientation="Horizontal" Spacing="5">
+							<TextBox Text="{Binding OpenRouterApiKey}" Width="300" Watermark="sk-or-..."/>
+							<Button Content="Установить" Command="{Binding SetApiKeyCommand}"/>
+						</StackPanel>
+						<CheckBox Content="Использовать API (вместо локальной модели)" 
+								  IsChecked="{Binding UseApiMode}" 
+								  Margin="0,5,0,0"/>
+					</StackPanel>
+				</Expander>
 				<!-- Быстрые кнопки -->
-				<StackPanel Orientation="Horizontal" Spacing="5">
+				<StackPanel Orientation="Horizontal" Spacing="5" Margin="0,5,0,0">
 					<Button Content="Суммаризировать" Command="{Binding SetSummarizeCommand}"/>
 					<Button Content="Перефразировать" Command="{Binding SetRephraseCommand}"/>
 				</StackPanel>

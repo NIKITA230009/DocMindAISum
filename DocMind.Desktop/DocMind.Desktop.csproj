@@ -5,14 +5,14 @@
 		<Nullable>enable</Nullable>
 		<BuiltInComInteropSupport>true</BuiltInComInteropSupport>
 	</PropertyGroup>
-	<ItemGroup>
+	<!-- <ItemGroup>
 	  <None Remove="Phi-3-mini-4k-instruct-q4.gguf" />
 	</ItemGroup>
 	<ItemGroup>
 	  <Content Include="Phi-3-mini-4k-instruct-q4.gguf">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </Content>
-	</ItemGroup>
+	</ItemGroup> -->
 
 	<ItemGroup>
 		<PackageReference Include="Avalonia" Version="11.3.12" />
@@ -23,14 +23,13 @@
 		<PackageReference Include="LLamaSharp" Version="0.26.0" />
 		<PackageReference Include="LLamaSharp.Backend.Cpu" Version="0.26.0" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.3" />
-		<PackageReference Include="Serilog" Version="3.1.1" />
-		<PackageReference Include="Serilog.Sinks.Console" Version="5.0.1" />
-		<PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
 		<PackageReference Include="DocumentFormat.OpenXml" Version="3.4.1" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\DocMind.Core\DocMind.Core.csproj" />
+		<ProjectReference Include="..\DocMind.Data\DocMind.Data.csproj" />
+		<ProjectReference Include="..\DocMind.Infrastructure\DocMind.Infrastructure.csproj" />
 		<ProjectReference Include="..\DocMind.Services\DocMind.Services.csproj" />
 	</ItemGroup>
 </Project>

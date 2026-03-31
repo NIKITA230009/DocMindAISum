@@ -45,7 +45,10 @@ public class LLamaSharpAiService : ILocalAiService, IDisposable
             "Phi-3-mini-4k-instruct-q4.gguf");
 
         if (!File.Exists(modelPath))
-            throw new FileNotFoundException("Модель не найдена. Убедитесь, что файл .gguf находится в папке приложения.");
+    {
+        // можно установить флаг, что модель недоступна, и возвращать заглушку в ExecuteCommandAsync
+        return;
+    }
 
         _modelParams = new ModelParams(modelPath)
         {

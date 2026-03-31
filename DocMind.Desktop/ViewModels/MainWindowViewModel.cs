@@ -18,11 +18,12 @@ public partial class MainWindowViewModel : ObservableObject
 {
     private readonly IDocumentService _documentService;
     private readonly IDocumentCacheService _cacheService;
+    private readonly IThemeService _themeService;
     private StoredDocument? _selectedDocument;
     private readonly IAiService _aiService;
     private readonly IQueryHistoryService _historyService;
     private readonly ILocalAiService _localAiService;
-
+    private readonly IOpenRouterAiService _openRouterAiService;
 
     [ObservableProperty]
     private ObservableCollection<StoredDocument> _recentDocuments = new();
@@ -47,12 +48,23 @@ public partial class MainWindowViewModel : ObservableObject
     private string _statusText = "Готов";
 
     [ObservableProperty]
-    private string _aiCommand = string.Empty; // поле для ввода команды
+    private string _aiCommand = string.Empty;
 
     [ObservableProperty]
     private ObservableCollection<QueryHistory> _queryHistory = new();
 
+    [ObservableProperty]
+    private bool _isDarkMode;
+
+    [ObservableProperty]
+    private string _openRouterApiKey = string.Empty;
+
+    [ObservableProperty]
+    private bool _useApiMode;
+
     private DocumentModel? _currentDocument;
+
+    public bool IsApiConfigured => _openRouterAiService.IsConfigured;
 
     public StoredDocument? SelectedDocument
     {
@@ -60,16 +72,25 @@ public partial class MainWindowViewModel : ObservableObject
         set => SetProperty(ref _selectedDocument, value); 
     }
 
-    public MainWindowViewModel(IDocumentService documentService, ILocalAiService localAiService, IQueryHistoryService historyService, IAiService aiService, IDocumentCacheService cacheService)
+    public MainWindowViewModel(
+        IDocumentService documentService, 
+        ILocalAiService localAiService, 
+        IQueryHistoryService historyService, 
+        IAiService aiService, 
+        IDocumentCacheService cacheService,
+        IThemeService themeService,
+        IOpenRouterAiService openRouterAiService)
     {
         _documentService = documentService;
-        Console.WriteLine("[VM] Конструктор вызван");
         _cacheService = cacheService;
-        LoadRecentDocumentsAsync().ConfigureAwait(false);
+        _themeService = themeService;
         _aiService = aiService;
         _historyService = historyService;
         _localAiService = localAiService;
-
+        _openRouterAiService = openRouterAiService;
+        
+        _isDarkMode = _themeService.IsDarkMode;
+        LoadRecentDocumentsAsync().ConfigureAwait(false);
     }
 
     // Метод загрузки истории
@@ -216,18 +237,24 @@ public partial class MainWindowViewModel : ObservableObject
         if (string.IsNullOrWhiteSpace(AiCommand) || string.IsNullOrWhiteSpace(DocumentContent))
             return;
 
-        string textToSend = DocumentContent; // позже можно будет отправлять выделенный текст
+        string textToSend = DocumentContent;
 
         IsAiBusy = true;
         AiOutputText = "Обработка...";
 
         try
         {
-            // Используем локальный сервис
-            var result = await _localAiService.ExecuteCommandAsync(textToSend, AiCommand);
+            string result;
+            if (UseApiMode && _openRouterAiService.IsConfigured)
+            {
+                result = await _openRouterAiService.ExecuteCommandAsync(textToSend, AiCommand);
+            }
+            else
+            {
+                result = await _localAiService.ExecuteCommandAsync(textToSend, AiCommand);
+            }
             AiOutputText = result;
 
-            // Сохраняем в историю
             var historyEntry = new QueryHistory
             {
                 DocumentPath = _currentDocument?.FilePath ?? "",
@@ -305,5 +332,41 @@ public partial class MainWindowViewModel : ObservableObject
     {
         AiCommand = "перефразируй";
         ExecuteAiCommandCommand.Execute(null);
+    }
+
+    [RelayCommand]
+    private void SetLightTheme()
+    {
+        _themeService.SetTheme(false);
+        IsDarkMode = false;
+    }
+
+    [RelayCommand]
+    private void SetDarkTheme()
+    {
+        _themeService.SetTheme(true);
+        IsDarkMode = true;
+    }
+
+    [RelayCommand]
+    private void SetApiKey()
+    {
+        if (!string.IsNullOrWhiteSpace(OpenRouterApiKey))
+        {
+            _openRouterAiService.SetApiKey(OpenRouterApiKey);
+            OnPropertyChanged(nameof(IsApiConfigured));
+            StatusText = "OpenRouter API ключ настроен";
+        }
+    }
+
+    [RelayCommand]
+    private void ToggleApiMode()
+    {
+        if (UseApiMode && !_openRouterAiService.IsConfigured)
+        {
+            StatusText = "Сначала введите OpenRouter API ключ";
+            UseApiMode = false;
+            return;
+        }
     }
 }

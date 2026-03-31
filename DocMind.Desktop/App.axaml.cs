@@ -2,6 +2,7 @@ using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using DocMind.Core.Interfaces;
+using DocMind.Desktop.Services;
 using DocMind.Desktop.ViewModels;
 using DocMind.Desktop.Views;
 using DocMind.Services.History;
@@ -49,17 +50,17 @@ namespace DocMind.Desktop
 
         private void ConfigureServices(IServiceCollection services)
         {
+            services.AddHttpClient<IOpenRouterAiService, OpenRouterAiService>();
+            services.AddSingleton<IThemeService, ThemeService>();
             services.AddSingleton<MainWindowViewModel>();
             services.AddSingleton<IDocumentService, WordDocumentService>();
             services.AddSingleton<IDocumentCacheService, LiteDbDocumentCache>();
-            // Регистрация Refit-клиента
             services.AddRefitClient<IAiApi>()
                 .ConfigureHttpClient(c =>
                 {
-                    c.BaseAddress = new Uri("http://localhost:5000"); // замените на реальный адрес сервера
+                    c.BaseAddress = new Uri("http://localhost:5000");
                     c.Timeout = TimeSpan.FromSeconds(30);
                 });
-            // Регистрация AI-сервиса
             services.AddSingleton<IAiService, AiService>();
             services.AddSingleton<IQueryHistoryService, LiteDbQueryHistoryService>();
             services.AddSingleton<ILocalAiService, LLamaSharpAiService>();

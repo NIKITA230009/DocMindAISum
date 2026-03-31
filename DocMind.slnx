@@ -1,6 +1,8 @@
 <Solution>
   <Project Path="DocMind.Core/DocMind.Core.csproj" />
-  <Project Path="DocMind.Desktop/DocMind.Desktop.csproj" />
+  <Project Path="DocMind.Data/DocMind.Data.csproj" />
+  <Project Path="DocMind.Infrastructure/DocMind.Infrastructure.csproj" />
   <Project Path="DocMind.Services/DocMind.Services.csproj" />
+  <Project Path="DocMind.Desktop/DocMind.Desktop.csproj" />
   <Project Path="DocMind.Tests/DocMind.Tests.csproj" />
 </Solution>

@@ -1,0 +1,33 @@
+services:
+  build:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: build
+    image: docmind/build
+    volumes:
+      - ./DocMind.Desktop/Phi-3-mini-4k-instruct-q4.gguf:/app/Phi-3-mini-4k-instruct-q4.gguf:ro
+
+  test:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: test
+    image: docmind/test
+    volumes:
+      - ./DocMind.Desktop/Phi-3-mini-4k-instruct-q4.gguf:/src/Phi-3-mini-4k-instruct-q4.gguf:ro
+
+  runtime:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runtime
+    image: docmind/runtime
+    volumes:
+      - ./DocMind.Desktop/Phi-3-mini-4k-instruct-q4.gguf:/app/Phi-3-mini-4k-instruct-q4.gguf:ro
+    # Note: Avalonia GUI requires X11 or Wayland socket mount to run:
+    # volumes:
+    #   - /tmp/.X11-unix:/tmp/.X11-unix:rw
+    #   - $HOME/.Xauthority:/home/appuser/.Xauthority:ro
+    # environment:
+    #   - DISPLAY=:0
